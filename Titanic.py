@@ -1,3 +1,6 @@
+# Install all dependencies by using this command
+# pip3 install -r dependencies.txt
+
 #pip install numpy
 import numpy as np # linear algebra
 
