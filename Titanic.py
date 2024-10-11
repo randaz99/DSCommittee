@@ -1,3 +1,5 @@
+#BIG CHNAGES
+
 #pip install numpy
 import numpy as np # linear algebra
 
