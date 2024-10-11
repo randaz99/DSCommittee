@@ -1,4 +1,4 @@
-#BIG CHNAGES
+#BIG CHNAGES ahead
 
 #pip install numpy
 import numpy as np # linear algebra
