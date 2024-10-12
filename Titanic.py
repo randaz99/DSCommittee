@@ -1,14 +1,14 @@
 # Install all dependencies by using this command
-# pip3 install -r dependencies.txt
+# FOR MAC:
+#          pip3 install -r dependencies.txt
+# FOR WINDOWS:
+#         pip install -r dependencies.txt
 
-#pip install numpy
 import numpy as np # linear algebra
 
-#pip install pandas
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv), cool 2D arrays
 from pandas.plotting import scatter_matrix
 
-#pip install scikit-learn
 from sklearn.ensemble import HistGradientBoostingClassifier
 from sklearn.model_selection import cross_val_score
 from sklearn.linear_model import LogisticRegression
@@ -26,7 +26,6 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import BaggingClassifier
 
-#pip install matplotlib
 from matplotlib import pyplot as plt
 
 # takes the training data spreadsheet (csv) and puts it into two panda arrays #
