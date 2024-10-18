@@ -10,10 +10,11 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import xgboost as xgb
 
 # %%
-train = pd.read_csv("Data Science/Competitions/Titanic/train.csv")
-test = pd.read_csv("Data Science/Competitions/Titanic/test.csv")
+train = pd.read_csv("train.csv")
+test = pd.read_csv("test.csv")
 
 print(train.head())
 
@@ -286,7 +287,6 @@ plt.show()
 # And Now We Start The Machine Learning!
 
 # %%
-import xgboost as xgb
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
@@ -301,7 +301,7 @@ from sklearn.metrics import accuracy_score, confusion_matrix
 # Now I'll test the performance of three models with and without dropping the Pclass column!
 
 # %%
-actual = pd.read_csv("Data Science/Competitions/Titanic/gender_submission.csv")    #This is a submition file provided that has all women surviing.
+actual = pd.read_csv("gender_submission.csv")    #This is a submition file provided that has all women surviing.
 actual = actual.drop("PassengerId", axis=1)
 
 
@@ -373,7 +373,7 @@ print(f"Accuracy before dropping for Logistic Regression: {accuracy_before_dropp
 ################################################################################
 
 
-actual = pd.read_csv("Data Science/Competitions/Titanic/gender_submission.csv") #This is a submition file provided that has all women surviing.
+actual = pd.read_csv("gender_submission.csv") #This is a submition file provided that has all women surviing.
 actual = actual.drop("PassengerId", axis=1)
 
 
@@ -445,7 +445,7 @@ print(f"Accuracy after dropping for Logistic Regression: {accuracy_after_droppin
 # Pclass column will be dropped below!
 
 # %%
-actual = pd.read_csv("Data Science/Competitions/Titanic/gender_submission.csv") #This is a submition file provided that has all women surviing.
+actual = pd.read_csv("gender_submission.csv") #This is a submition file provided that has all women surviing.
 actual = actual.drop("PassengerId", axis=1)
 
 
@@ -1204,7 +1204,7 @@ print(f"Accuracy after optimization for Decision Tree: {accuracy_after_optimizat
 
 # %%
 #Used to pull passager IDs"
-test = pd.read_csv("Data Science/Competitions/Titanic/test.csv")
+test = pd.read_csv("test.csv")
 
 # %%
 submission = pd.DataFrame({
