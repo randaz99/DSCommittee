@@ -27,6 +27,7 @@ for column in train.columns:
         # Apply the mapping
         train[column] = train[column].map(season_mapping)
 
-
-sns.heatmap(train, cmap='coolwarm', annot=True)
+sns.set_style("whitegrid")
+sns.heatmap(train)
+plt.show()
 print("done")
