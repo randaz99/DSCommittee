@@ -13,10 +13,10 @@ train = pd.get_dummies(train)
 
 #
 season_mapping = {
-    'Spring': 1,
-    'Summer': 2,
-    'Fall': 3,
-    'Winter': 4
+    'Spring': 0,
+    'Summer': 1,
+    'Fall': 2,
+    'Winter': 3
 }
 
 # Iterate over each column in the DataFrame
