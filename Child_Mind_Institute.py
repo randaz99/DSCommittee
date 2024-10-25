@@ -28,6 +28,7 @@ for column in train.columns:
         train[column] = train[column].map(season_mapping)
 
 sns.set_style("whitegrid")
-sns.countplot(train, x="Basic_Demos-Enroll_Season", hue="sii")
-plt.show()
+for column in train.columns:
+    sns.countplot(train, x=column, hue="sii")
+    plt.show()
 print("done")
