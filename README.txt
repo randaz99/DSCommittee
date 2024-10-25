@@ -1,4 +1,5 @@
 Titanic_Spring2024 conatains the Titanic_Teach code.
+Child_Mind_Institute.py contains the code for our new project.
 
 To make a change to the main repository:
     1. Remote -> Checkout 'main' branch
