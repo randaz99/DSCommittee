@@ -1,5 +1,5 @@
-Titanic_Spring2024 conatains the Titanic_Teach code.
-Child_Mind_Institute.py contains the code for our new project.
+Main.py contains the funtion calls for our new project. (run this to run the project)
+_______Helpers.py files contin the functions that run in Main.py
 
 To make a change to the main repository:
     1. Remote -> Checkout 'main' branch
@@ -13,5 +13,10 @@ To make a change to the main repository:
 To update a banch with name 'branchDistination' with the changes from 'branchSource':
     1. Remote -> Checkout 'branchSource' branch
     2. Remote -> Pull into 'branchName' using merge
+
+
+
+
+Titanic_Spring2024 conatains the Titanic_Teach code.
 
 
