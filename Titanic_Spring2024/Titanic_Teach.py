@@ -13,8 +13,8 @@ import seaborn as sns
 import xgboost as xgb
 
 # %%
-train = pd.read_csv("train.csv")
-test = pd.read_csv("test.csv")
+train = pd.read_csv("../train.csv")
+test = pd.read_csv("../test.csv")
 
 print(train.head())
 
@@ -1204,7 +1204,7 @@ print(f"Accuracy after optimization for Decision Tree: {accuracy_after_optimizat
 
 # %%
 #Used to pull passager IDs"
-test = pd.read_csv("test.csv")
+test = pd.read_csv("../test.csv")
 
 # %%
 submission = pd.DataFrame({
