@@ -7,16 +7,17 @@ import seaborn as sns
 train = pd.read_csv('train.csv')
 test = pd.read_csv('test.csv')
 
+
+train = train.drop("id", axis=1)
 print(train.isna().sum())
-train = pd.get_dummies(train)
 # Mapping seasons to numbers
 
 #
 season_mapping = {
-    'Spring': 1,
-    'Summer': 2,
-    'Fall': 3,
-    'Winter': 4
+    'Spring' : 0,
+    'Summer' : 1,
+    'Fall'   : 2,
+    'Winter' : 3
 }
 
 # Iterate over each column in the DataFrame
@@ -26,6 +27,5 @@ for column in train.columns:
         # Apply the mapping
         train[column] = train[column].map(season_mapping)
 
-train.dropna(inplace=False)
 
 sns.heatmap(train, cmap='coolwarm', annot=True)
