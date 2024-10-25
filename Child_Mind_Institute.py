@@ -9,7 +9,23 @@ test = pd.read_csv('test.csv')
 
 print(train.isna().sum())
 train = pd.get_dummies(train)
-train["Basic_Demos-Enroll_Season"] = [0 if i=="Spring"  i in train["Basic_Demos-Enroll_Seaso"]]
+# Mapping seasons to numbers
+
+#
+season_mapping = {
+    'Spring': 1,
+    'Summer': 2,
+    'Fall': 3,
+    'Winter': 4
+}
+
+# Iterate over each column in the DataFrame
+for column in train.columns:
+    # Check if any value in the column is a season (e.g., if the column has any value in the mapping keys)
+    if train[column].isin(season_mapping.keys()).any():
+        # Apply the mapping
+        train[column] = train[column].map(season_mapping)
+
 train.dropna(inplace=False)
 
 sns.heatmap(train, cmap='coolwarm', annot=True)
