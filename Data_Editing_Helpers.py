@@ -2,9 +2,9 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-import pickle
 import os
 import pyarrow.parquet as pq
+import joblib
 
 
 def readData():
@@ -42,24 +42,26 @@ def makeSNS():
 
 def unCacheOrLoad(file):
     # Path for the cache file
-    name = file.replace(".csv",'')
-    name = name.replace(".parquet",'')
-    path = 'cache/' + name + '_cache.pkl'
+    name = file.replace(".csv", '').replace(".parquet", '')
+    path = 'cache/' + name + '_cache.joblib'
 
     # Check if the cache file exists
     if os.path.exists(path):
-        # Load from cache
-        with open(path, 'rb') as file:
-            data = pickle.load(file)
-        print("read from cache")
+        # Load from joblib cache
+        data = joblib.load(path)
+        print("Read from joblib cache")
     else:
         # Load from the original source
-        if file.__contains__(".csv"):
+        if file.endswith(".csv"):
             data = pd.read_csv(file)
-        else:
+        elif file.endswith(".parquet"):
             data = pq.read_table(file).to_pandas()
-        # Save to cache
-        with open(path, 'wb') as file:
-            pickle.dump(data, file)
-        print("Read from file")
+        else:
+            raise ValueError("Unsupported file format")
+
+        # Save to joblib cache
+        os.makedirs('cache', exist_ok=True)
+        joblib.dump(data, path)
+        print("Data loaded and cached with joblib")
+
     return data
