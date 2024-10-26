@@ -2,6 +2,9 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import os
+import pyarrow.parquet as pq
+import joblib
 
 
 def readData():
@@ -37,4 +40,28 @@ def makeSNS():
         plt.show()
     print("done")
 
-makeSNS()
+def unCacheOrLoad(file):
+    # Path for the cache file
+    name = file.replace(".csv", '').replace(".parquet", '')
+    path = 'cache/' + name + '_cache.joblib'
+
+    # Check if the cache file exists
+    if os.path.exists(path):
+        # Load from joblib cache
+        data = joblib.load(path)
+        print("Read from joblib cache")
+    else:
+        # Load from the original source
+        if file.endswith(".csv"):
+            data = pd.read_csv(file)
+        elif file.endswith(".parquet"):
+            data = pq.read_table(file).to_pandas()
+        else:
+            raise ValueError("Unsupported file format")
+
+        # Save to joblib cache
+        os.makedirs('cache', exist_ok=True)
+        joblib.dump(data, path)
+        print("Data loaded and cached with joblib")
+
+    return data
