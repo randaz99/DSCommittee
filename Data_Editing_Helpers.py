@@ -1,3 +1,5 @@
+from typing import Dict
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -14,24 +16,33 @@ def readData():
 
 train, test = readData()
 
-def dropID():
-    train = train.drop("id", axis=1)
-    print(train.isna().sum())
-    # Mapping seasons to numbers
+def dropColumns(file, cols: list):
+    file = file.drop(cols, axis=1, inplace=True)
 
+    # print(file.isna().sum())
+
+# Mapping seasons to numbers
 season_mapping = {
     'Spring' : 0,
     'Summer' : 1,
     'Fall'   : 2,
     'Winter' : 3
 }
-def plotCounts():
+def map_seasons(file):
+    season_mapping: dict[str, int] = {
+        'Spring': 0,
+        'Summer': 1,
+        'Fall': 2,
+        'Winter': 3
+    }
     # Iterate over each column in the DataFrame
-    for column in train.columns:
+    for column in file.columns:
         # Check if any value in the column is a season (e.g., if the column has any value in the mapping keys)
-        if train[column].isin(season_mapping.keys()).any():
+        if file[column].isin(season_mapping.keys()).any():
             # Apply the mapping
-            train[column] = train[column].map(season_mapping)
+            file[column] = file[column].map(season_mapping)
+
+
 
 def makeSNS():
     sns.set_style("whitegrid")
@@ -65,3 +76,11 @@ def unCacheOrLoad(file):
         print("Data loaded and cached with joblib")
 
     return data
+
+# Find out what columns are in train df but not in test df
+def findMissingCols():
+    missingCols = []
+    for col in train.columns[:-1]:
+        if col not in test.columns:
+            missingCols.append(col)
+    return missingCols
