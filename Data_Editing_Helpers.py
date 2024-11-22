@@ -98,7 +98,7 @@ def generate_submission():
 
 def convert_strings(train, test):
     train = pd.get_dummies(train)
-    test = pd.get_dummies(test)
+    test = pd.get_dummies(test)    # needs to be changs
     return train, test
 
 def remove_blank_rows(train):
