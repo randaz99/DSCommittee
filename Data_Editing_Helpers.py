@@ -5,6 +5,8 @@ import seaborn as sns
 import os
 import pyarrow.parquet as pq
 import joblib
+from sklearn.model_selection import RandomizedSearchCV
+from sklearn.tree import DecisionTreeRegressor, DecisionTreeClassifier
 
 
 def readData():
@@ -12,9 +14,15 @@ def readData():
     test = pd.read_csv('test.csv')
     return train, test
 
-def dropID(train, test):
-    train = train.drop("id", axis=1)
-    test = test.drop("id", axis=1)
+def dropID(train, test, y_name):
+    columns = train.columns.difference(test.columns)
+    column_list = columns.to_list()
+    column_list.append('id')
+    column_list.remove(y_name)
+    print(column_list)
+
+    train = train.drop(column_list, axis=1)
+    test = test.drop('id', axis=1)
     print(train.isna().sum())
     return train, test
 
@@ -35,7 +43,7 @@ def plotCounts(train):
 def makeSNS(train):
     sns.set_style("whitegrid")
     for column in train.columns:
-        sns.countplot(train, x=column, hue="sii")
+        sns.countplot(train, x=column)
         plt.show()
     print("done")
 
@@ -71,3 +79,27 @@ def fill_NA(train, test, fill=0):
     for col in test.columns:
         test[col] = test[col].fillna(fill)
     return train, test
+
+def find_best_params(train, y_name):
+    y_train = train['sii']
+    X_train = train.drop(y_name, axis=1)
+    dt_model = DecisionTreeClassifier(random_state=0)
+    param_grid = {
+        'max_depth': [3, 5, 7, 9],
+        'min_samples_split': [2, 5, 10],
+        'min_samples_leaf': [1, 5, 10],
+        'criterion': ['gini', 'entropy']
+    }
+    random_search = RandomizedSearchCV(dt_model, param_grid, cv=5, scoring='accuracy', n_iter=10, random_state=1103)
+    random_search.fit(X_train, y_train)
+
+def generate_submission():
+    pass
+
+def convert_strings(train, test):
+    train = pd.get_dummies(train)
+    test = pd.get_dummies(test)
+    return train, test
+
+def remove_blank_rows(train):
+    return train.dropna(subset=['sii'])
