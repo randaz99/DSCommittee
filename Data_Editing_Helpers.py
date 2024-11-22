@@ -69,5 +69,5 @@ def fill_NA(train, test, fill=0):
     for col in train.columns:
         train[col] = train[col].fillna(fill)
     for col in test.columns:
-        test[col] = test[col.fillna(fill)]
+        test[col] = test[col].fillna(fill)
     return train, test
