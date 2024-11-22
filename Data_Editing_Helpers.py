@@ -12,12 +12,11 @@ def readData():
     test = pd.read_csv('test.csv')
     return train, test
 
-train, test = readData()
-
-def dropID():
+def dropID(train, test):
     train = train.drop("id", axis=1)
+    test = test.drop("id", axis=1)
     print(train.isna().sum())
-    # Mapping seasons to numbers
+    return train, test
 
 season_mapping = {
     'Spring' : 0,
@@ -25,7 +24,7 @@ season_mapping = {
     'Fall'   : 2,
     'Winter' : 3
 }
-def plotCounts():
+def plotCounts(train):
     # Iterate over each column in the DataFrame
     for column in train.columns:
         # Check if any value in the column is a season (e.g., if the column has any value in the mapping keys)
@@ -33,7 +32,7 @@ def plotCounts():
             # Apply the mapping
             train[column] = train[column].map(season_mapping)
 
-def makeSNS():
+def makeSNS(train):
     sns.set_style("whitegrid")
     for column in train.columns:
         sns.countplot(train, x=column, hue="sii")
@@ -65,3 +64,10 @@ def unCacheOrLoad(file):
         print("Data loaded and cached with joblib")
 
     return data
+
+def fill_NA(train, test, fill=0):
+    for col in train.columns:
+        train[col] = train[col].fillna(fill)
+    for col in test.columns:
+        test[col] = test[col.fillna(fill)]
+    return train, test
