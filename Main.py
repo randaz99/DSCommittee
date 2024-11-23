@@ -9,8 +9,9 @@ train_parq = Data_Editing_Helpers.unCacheOrLoad("series_train.parquet")
 # Wrangling
 train, test = Data_Editing_Helpers.map_seasons(train, test)
 train, test = Data_Editing_Helpers.dropID(train, test, 'sii')
-train, test = Data_Editing_Helpers.fill_NA(train, test, fill=99)
 train = Data_Editing_Helpers.remove_blank_rows(train)
+train, test = Data_Editing_Helpers.fill_NA(train, test, fill=99)
+
 
 # Visualizing
 #Data_Editing_Helpers.makeSNS(train)   # This oputputs all graphs, can be anoying
