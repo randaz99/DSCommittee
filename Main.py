@@ -13,7 +13,7 @@ train, test = Data_Editing_Helpers.fill_NA(train, test, fill=99)
 train = Data_Editing_Helpers.remove_blank_rows(train)
 
 # Visualizing
-#Data_Editing_Helpers.makeSNS(train)
+#Data_Editing_Helpers.makeSNS(train)   # This oputputs all graphs, can be anoying
 #print(train)
 
 # Analyzing
