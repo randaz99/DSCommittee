@@ -5,6 +5,7 @@ import seaborn as sns
 import os
 import pyarrow.parquet as pq
 import joblib
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.tree import DecisionTreeRegressor, DecisionTreeClassifier
 
@@ -32,13 +33,19 @@ season_mapping = {
     'Fall'   : 2,
     'Winter' : 3
 }
-def plotCounts(train):
+def map_seasons(train, test):
     # Iterate over each column in the DataFrame
     for column in train.columns:
         # Check if any value in the column is a season (e.g., if the column has any value in the mapping keys)
         if train[column].isin(season_mapping.keys()).any():
             # Apply the mapping
             train[column] = train[column].map(season_mapping)
+    for column in test.columns:
+        # Check if any value in the column is a season (e.g., if the column has any value in the mapping keys)
+        if test[column].isin(season_mapping.keys()).any():
+            # Apply the mapping
+            test[column] = test[column].map(season_mapping)
+    return train, test
 
 def makeSNS(train):
     sns.set_style("whitegrid")
@@ -80,9 +87,10 @@ def fill_NA(train, test, fill=0):
         test[col] = test[col].fillna(fill)
     return train, test
 
-def find_best_params(train, y_name):
+def find_best_params(train, test, y_name):
     y_train = train['sii']
     X_train = train.drop(y_name, axis=1)
+    X_test = test
     dt_model = DecisionTreeClassifier(random_state=0)
     param_grid = {
         'max_depth': [3, 5, 7, 9],
@@ -93,13 +101,27 @@ def find_best_params(train, y_name):
     random_search = RandomizedSearchCV(dt_model, param_grid, cv=5, scoring='accuracy', n_iter=10, random_state=1103)
     random_search.fit(X_train, y_train)
 
-def generate_submission():
-    pass
+    best_params = random_search.best_params_
 
-def convert_strings(train, test):
+    best_model_dt = random_search.best_estimator_
+
+    print(best_params)
+
+    y_pred_optimized = best_model_dt.predict(X_test)
+    return y_pred_optimized
+
+def get_dummies(train, test):
     train = pd.get_dummies(train)
-    test = pd.get_dummies(test)    # needs to be changs
+    test = pd.get_dummies(test)    # needs to be changed from get dummies to something better!!!!
     return train, test
 
 def remove_blank_rows(train):
     return train.dropna(subset=['sii'])
+
+
+def generate_submission(y_predictions):
+    test = pd.read_csv('test.csv')
+    submission = pd.DataFrame({'id': test['id'],
+                               'sii': y_predictions})
+    submission.to_csv('submission.csv', index=False)
+
