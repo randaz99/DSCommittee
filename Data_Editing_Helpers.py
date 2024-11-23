@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
@@ -26,7 +25,7 @@ def unCacheOrLoad(file):
     if os.path.exists(path):
         # Load from joblib cache
         data = joblib.load(path)
-        print("Read from joblib cache")
+        print(f"Read {file} from joblib cache")
     else:
         # Load from the original source
         if file.endswith(".csv"):
@@ -39,7 +38,7 @@ def unCacheOrLoad(file):
         # Save to joblib cache
         os.makedirs('cache', exist_ok=True)
         joblib.dump(data, path)
-        print("Data loaded and cached with joblib")
+        print(f"Data {file} loaded and cached with joblib")
 
     return data
 
@@ -49,11 +48,11 @@ def dropID(train, test, y_name):
     column_list = columns.to_list()
     column_list.append('id')
     column_list.remove(y_name)
-    print(column_list)
+    print(f'\nDeleting unsililare rows: {column_list}')
 
     train = train.drop(column_list, axis=1)
     test = test.drop('id', axis=1)
-    print(train.isna().sum())
+    #print(train.isna().sum())
     return train, test
 
 
@@ -116,7 +115,7 @@ def find_best_params(train, test, y_name):
 
     best_model_dt = random_search.best_estimator_
 
-    print(best_params)
+    print(f'\nBest parameters: {best_params}')
 
     y_pred_optimized = best_model_dt.predict(X_test)
     return y_pred_optimized
@@ -125,4 +124,6 @@ def generate_submission(y_predictions):
     test = pd.read_csv('test.csv')
     submission = pd.DataFrame({'id': test['id'],
                                'sii': y_predictions})
+
+    print(f'\nSubmission Preview:\n {submission}')
     submission.to_csv('submission.csv', index=False)
