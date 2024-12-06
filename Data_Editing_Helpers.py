@@ -5,14 +5,14 @@ import os
 import pyarrow.parquet as pq
 import joblib
 from sklearn.model_selection import RandomizedSearchCV
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeRegressor, DecisionTreeClassifier
 
-
 season_mapping = {
-    'Spring' : 0,
-    'Summer' : 1,
-    'Fall'   : 2,
-    'Winter' : 3
+    'Spring' : 1,
+    'Summer' : 2,
+    'Fall'   : 3,
+    'Winter' : 4
 }
 
 
@@ -97,7 +97,7 @@ def makeSNS(train):
     print("done")
 
 
-def find_best_params(train, test, y_name):
+def decisiontree(train, test, y_name):
     y_train = train['sii']
     X_train = train.drop(y_name, axis=1)
     X_test = test
@@ -119,6 +119,31 @@ def find_best_params(train, test, y_name):
 
     y_pred_optimized = best_model_dt.predict(X_test)
     return y_pred_optimized
+
+def knn(train, test, y_name):
+    y_train = train['sii']
+    X_train = train.drop(y_name, axis=1)
+    X_test = test
+    dt_model = KNeighborsClassifier()
+    param_grid = {
+        "n_neighbors": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        "weights": ["uniform", "distance"],
+        "algorithm": ["ball_tree", "kd_tree", "brute"],
+        "leaf_size": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        "p": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    }
+
+    random_search = RandomizedSearchCV(dt_model, param_grid, cv=5, scoring='accuracy', n_iter=10, random_state=1103)
+    random_search.fit(X_train, y_train)
+
+    best_params = random_search.best_params_
+    best_model_dt = random_search.best_estimator_
+
+    print(f'\nBest parameters: {best_params}')
+
+    y_pred_optimized = best_model_dt.predict(X_test)
+    return y_pred_optimized
+
 
 def generate_submission(y_predictions):
     test = pd.read_csv('test.csv')
