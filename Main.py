@@ -31,9 +31,10 @@ Data_Editing_Helpers.decisiontree(X_train, y_train, y_name)
 # Change the path name to reflect the model you wish to make predictions with       vvvvvvvvvvvvvi
 modelpath = "./TrainedModels/decisionTreeModel.pkl"
 predictions = Data_Editing_Helpers.makePredictionUsingModel(modelpath, test)
-accuracy_prediction = Data_Editing_Helpers.makePredictionUsingModel(modelpath, X_test)
+
 
 #analising models
+accuracy_prediction = Data_Editing_Helpers.makePredictionUsingModel(modelpath, X_test)
 Data_Editing_Helpers.accuracy(y_test, accuracy_prediction)
 
 
