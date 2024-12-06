@@ -4,9 +4,12 @@ import seaborn as sns
 import os
 import pyarrow.parquet as pq
 import joblib
+from sklearn.ensemble import AdaBoostClassifier
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeRegressor, DecisionTreeClassifier
+from sklearn.model_selection import GridSearchCV
+
 
 season_mapping = {
     'Spring' : 1,
@@ -134,6 +137,28 @@ def knn(train, test, y_name):
     }
 
     random_search = RandomizedSearchCV(dt_model, param_grid, cv=5, scoring='accuracy', n_iter=10, random_state=1103)
+    random_search.fit(X_train, y_train)
+
+    best_params = random_search.best_params_
+    best_model_dt = random_search.best_estimator_
+
+    print(f'\nBest parameters: {best_params}')
+
+    y_pred_optimized = best_model_dt.predict(X_test)
+    return y_pred_optimized
+
+def adaboostClassifier(train, test, y_name):
+    y_train = train['sii']
+    X_train = train.drop(y_name, axis=1)
+    X_test = test
+    dt_model = AdaBoostClassifier()
+
+    param_grid = {
+        'n_estimators': [50, 100, 150, 200],
+        'learning_rate': [0.01, 0.1, 0.5, 1.0],
+        'algorithm': ['SAMME', 'SAMME.R']
+    }
+    random_search = GridSearchCV(dt_model, param_grid)
     random_search.fit(X_train, y_train)
 
     best_params = random_search.best_params_
