@@ -163,8 +163,7 @@ def adaboostClassifier(train, test, y_name):
 
     print(f'\nBest parameters: {best_params}')
 
-    y_pred_optimized = best_model_dt.predict(X_test)
-    return y_pred_optimized
+    saveModel(best_model_dt, 'adaModel.pkl')
 
 
 def generate_submission(y_predictions):
