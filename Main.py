@@ -26,7 +26,7 @@ Data_Editing_Helpers.knn(train, test, "sii")  #Modle Sucks
 Data_Editing_Helpers.adaboostClassifier(train, test, "sii")  #Modle Sucks
 
 ## Making Predictions ##
-predictions = Data_Editing_Helpers.makePredictionUsingModel('knnModel.pkl', test)
+predictions = Data_Editing_Helpers.makePredictionUsingModel('./TrainedModels/knnModel.pkl', test)
 
 
 ## Submitting ##
