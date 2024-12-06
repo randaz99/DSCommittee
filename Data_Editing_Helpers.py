@@ -5,10 +5,12 @@ import os
 import pyarrow.parquet as pq
 import joblib
 from sklearn.ensemble import AdaBoostClassifier
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeRegressor, DecisionTreeClassifier
 from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import train_test_split
 
 
 season_mapping = {
@@ -99,11 +101,16 @@ def makeSNS(train):
         plt.show()
     print("done")
 
+def traintestslpit(train, test, y_name):
+    x = train.drop(columns=[y_name])
+    y = train[y_name]
 
-def decisiontree(train, test, y_name):
-    y_train = train['sii']
-    X_train = train.drop(y_name, axis=1)
-    X_test = test
+
+    X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+    return X_train, X_test, y_train, y_test, y_name
+
+def decisiontree(X_train, y_train, y_name):
+
     dt_model = DecisionTreeClassifier(random_state=1235)
     param_grid = {
         'max_depth': [3, 5, 7, 9],
@@ -137,6 +144,7 @@ def knn(train, test, y_name):
 
     random_search = RandomizedSearchCV(dt_model, param_grid, cv=5, scoring='accuracy', n_iter=10, random_state=1103)
     random_search.fit(X_train, y_train)
+
 
     best_params = random_search.best_params_
     best_model_dt = random_search.best_estimator_
@@ -182,3 +190,7 @@ def makePredictionUsingModel(file_path, X_test):
     model = joblib.load(file_path)
     y_pred_optimized = model.predict(X_test)
     return y_pred_optimized
+
+def accuracy (y_pred_optimized, y_test):
+    accuracy = accuracy_score(y_test, y_pred_optimized)
+    print("Accuracy of the Decision Tree model: {:.2f}%".format(accuracy * 100))
