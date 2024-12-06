@@ -152,3 +152,10 @@ def generate_submission(y_predictions):
 
     print(f'\nSubmission Preview:\n {submission}')
     submission.to_csv('submission.csv', index=False)
+
+
+def saveModel(model):
+    joblib.dump(model, 'decision_tree_model.pkl')
+
+def loadModel(file_path):
+    return joblib.load(file_path)
