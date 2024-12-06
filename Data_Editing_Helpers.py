@@ -119,9 +119,6 @@ def decisiontree(train, test, y_name):
     saveModel(best_model_dt, 'decisionTreeModel.pkl')
 
 
-    y_pred_optimized = best_model_dt.predict(X_test)
-    return y_pred_optimized
-
 def knn(train, test, y_name):
     y_train = train['sii']
     X_train = train.drop(y_name, axis=1)
@@ -144,9 +141,6 @@ def knn(train, test, y_name):
     print(f'\nBest parameters: {best_params}')
     saveModel(best_model_dt, 'knnModel.pkl')
 
-    y_pred_optimized = best_model_dt.predict(X_test)
-    return y_pred_optimized
-
 
 def generate_submission(y_predictions):
     test = pd.read_csv('test.csv')
@@ -160,9 +154,7 @@ def generate_submission(y_predictions):
 def saveModel(model, file_name):
     joblib.dump(model, file_name)
 
-def loadModel(file_path):
-    return joblib.load(file_path)
-
-def makePredictionUsingModel(model, X_test):
+def makePredictionUsingModel(file_path, X_test):
+    model = joblib.load(file_path)
     y_pred_optimized = model.predict(X_test)
     return y_pred_optimized
