@@ -26,7 +26,8 @@ Data_Editing_Helpers.knn(train, test, "sii")  #Modle Sucks
 Data_Editing_Helpers.adaboostClassifier(train, test, "sii")  #Modle Sucks
 
 ## Making Predictions ##
-predictions = Data_Editing_Helpers.makePredictionUsingModel('./TrainedModels/knnModel.pkl', test)
+# Change the path name to reflect the model you wish to make predictions with       vvvvvvvvvvvvvv
+predictions = Data_Editing_Helpers.makePredictionUsingModel('./TrainedModels/adaModel.pkl', test)
 
 
 ## Submitting ##
