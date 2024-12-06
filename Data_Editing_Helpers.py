@@ -119,9 +119,8 @@ def decisiontree(train, test, y_name):
     best_model_dt = random_search.best_estimator_
 
     print(f'\nBest parameters: {best_params}')
+    saveModel(best_model_dt, 'decisionTreeModel.pkl')
 
-    y_pred_optimized = best_model_dt.predict(X_test)
-    return y_pred_optimized
 
 def knn(train, test, y_name):
     y_train = train['sii']
@@ -143,9 +142,7 @@ def knn(train, test, y_name):
     best_model_dt = random_search.best_estimator_
 
     print(f'\nBest parameters: {best_params}')
-
-    y_pred_optimized = best_model_dt.predict(X_test)
-    return y_pred_optimized
+    saveModel(best_model_dt, 'knnModel.pkl')
 
 def adaboostClassifier(train, test, y_name):
     y_train = train['sii']
@@ -182,5 +179,7 @@ def generate_submission(y_predictions):
 def saveModel(model, file_name):
     joblib.dump(model, file_name)
 
-def loadModel(file_path):
-    return joblib.load(file_path)
+def makePredictionUsingModel(file_path, X_test):
+    model = joblib.load(file_path)
+    y_pred_optimized = model.predict(X_test)
+    return y_pred_optimized

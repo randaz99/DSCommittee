@@ -21,8 +21,9 @@ train, test = Data_Editing_Helpers.fill_NA(train, test, fill=99)
 
 
 ## Analyzing ##
-predictions = Data_Editing_Helpers.decisiontree(train, test, 'sii')
-#predictions = Data_Editing_Helpers.knn(train, test, "sii")  #Modle Sucks
+Data_Editing_Helpers.decisiontree(train, test, 'sii')
+Data_Editing_Helpers.knn(train, test, "sii")  #Modle Sucks
+predictions = Data_Editing_Helpers.makePredictionUsingModel('knnModel.pkl', test)
 
 
 ## Submitting ##
