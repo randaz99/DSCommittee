@@ -8,7 +8,7 @@ from sklearn.ensemble import AdaBoostClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.tree import DecisionTreeRegressor, DecisionTreeClassifier
+from sklearn.tree import  DecisionTreeClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 
@@ -101,13 +101,14 @@ def makeSNS(train):
         plt.show()
     print("done")
 
-def traintestslpit(train, test, y_name):
+def traintestslpit(train, y_name):
     x = train.drop(columns=[y_name])
     y = train[y_name]
 
-
     X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
-    return X_train, X_test, y_train, y_test, y_name
+    y_train = train[y_name]
+    X_train = train.drop(y_name, axis=1)
+    return X_train, X_test, y_train, y_test
 
 def decisiontree(X_train, y_train, y_name):
 
@@ -125,14 +126,12 @@ def decisiontree(X_train, y_train, y_name):
 
     best_model_dt = random_search.best_estimator_
 
-    print(f'\nBest parameters: {best_params}')
+    print(f'\nBest parameters Decisiontree: {best_params}')
     saveModel(best_model_dt, './TrainedModels/decisionTreeModel.pkl')
 
 
-def knn(train, test, y_name):
-    y_train = train['sii']
-    X_train = train.drop(y_name, axis=1)
-    X_test = test
+def knn(X_train, y_train,  y_name):
+
     dt_model = KNeighborsClassifier()
     param_grid = {
         "n_neighbors": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
@@ -149,19 +148,17 @@ def knn(train, test, y_name):
     best_params = random_search.best_params_
     best_model_dt = random_search.best_estimator_
 
-    print(f'\nBest parameters: {best_params}')
+    print(f'\nBest parameters KNN: {best_params}')
     saveModel(best_model_dt, './TrainedModels/knnModel.pkl')
 
-def adaboostClassifier(train, test, y_name):
-    y_train = train['sii']
-    X_train = train.drop(y_name, axis=1)
-    X_test = test
+def adaboostClassifier(X_train, y_train, y_name):
+
     dt_model = AdaBoostClassifier()
 
     param_grid = {
         'n_estimators': [50, 100, 150, 200],
         'learning_rate': [0.01, 0.1, 0.5, 1.0],
-        'algorithm': ['SAMME', 'SAMME.R']
+        'algorithm': ['SAMME']
     }
     random_search = GridSearchCV(dt_model, param_grid)
     random_search.fit(X_train, y_train)
@@ -180,7 +177,7 @@ def generate_submission(y_predictions):
                                'sii': y_predictions})
 
     print(f'\nSubmission Preview:\n {submission}')
-    submission.to_csv('submission.csv', index=False)
+    submission.to_csv('submission.csvy', index=False)
 
 
 def saveModel(model, file_name):
@@ -191,6 +188,6 @@ def makePredictionUsingModel(file_path, X_test):
     y_pred_optimized = model.predict(X_test)
     return y_pred_optimized
 
-def accuracy (y_pred_optimized, y_test):
+def accuracy (file_path,y_pred_optimized, y_test):
     accuracy = accuracy_score(y_test, y_pred_optimized)
-    print("Accuracy of the Decision Tree model: {:.2f}%".format(accuracy * 100))
+    print("Accuracy of the :" + str(file_path) + "{:.2f}%".format(accuracy * 100))
