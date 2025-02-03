@@ -12,15 +12,13 @@ from sklearn.tree import  DecisionTreeClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 
-#trying push controls 
-
+# Mapping for seasons
 season_mapping = {
     'Spring' : 1,
     'Summer' : 2,
     'Fall'   : 3,
     'Winter' : 4
 }
-
 
 def unCacheOrLoad(file):
     # Path for the cache file
@@ -49,15 +47,15 @@ def unCacheOrLoad(file):
     return data
 
 
-def dropID(train, test, y_name):
+def dropUnusedColumns(train, test, y_name, x_name):
     columns = train.columns.difference(test.columns)
     column_list = columns.to_list()
-    column_list.append('id')
+    column_list.append(x_name)
     column_list.remove(y_name)
     print(f'\nDeleting unsililare rows: {column_list}')
 
     train = train.drop(column_list, axis=1)
-    test = test.drop('id', axis=1)
+    test = test.drop(x_name, axis=1)
     #print(train.isna().sum())
     return train, test
 
@@ -77,7 +75,7 @@ def map_seasons(train, test):
     return train, test
 
 
-def fill_NA(train, test, fill=0):
+def fill_NA(train, test, fill):
     for col in train.columns:
         train[col] = train[col].fillna(fill)
     for col in test.columns:
@@ -91,8 +89,8 @@ def get_dummies(train, test):
     return train, test
 
 
-def remove_blank_rows(train):
-    return train.dropna(subset=['sii'])
+def remove_blank_rows(train, y_name):
+    return train.dropna(subset=[y_name])
 
 
 def makeSNS(train):
@@ -172,10 +170,10 @@ def adaboostClassifier(X_train, y_train, y_name):
     saveModel(best_model_dt, './TrainedModels/adaModel.pkl')
 
 
-def generate_submission(y_predictions):
+def generate_submission(y_predictions, x_name, y_name):
     test = pd.read_csv('test.csv')
-    submission = pd.DataFrame({'id': test['id'],
-                               'sii': y_predictions})
+    submission = pd.DataFrame({x_name: test[x_name],
+                               y_name : y_predictions})
 
     print(f'\nSubmission Preview:\n {submission}')
     submission.to_csv('submission.csvy', index=False)
